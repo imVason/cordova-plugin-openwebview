@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="hb.plugins.openWebview" version="1.0.0"
+    xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>openWebview</name>
+    <js-module name="openWebview" src="www/openWebview.js">
+        <clobbers target="cordova.plugins.openWebview" />
+    </js-module>
+    <platform name="android">
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="openWebview">
+                <param name="android-package" value="hb.plugins.openWebview.openWebview" />
+            </feature>
+        </config-file>
+        <config-file parent="/*" target="AndroidManifest.xml" />
+        <source-file src="src/android/openWebview.java" target-dir="src/hb/plugins/openWebview/openWebview" />
+        <source-file src="src/android/res/mipmap/open_webview_back.png" target-dir="res/mipmap-xxhdpi" />
+        <source-file src="src/android/res/mipmap/open_webview_close.png" target-dir="res/mipmap-xxhdpi" />
+    </platform>
+    <platform name="ios">
+        <config-file parent="/*" target="config.xml">
+            <feature name="openWebview">
+                <param name="ios-package" value="openWebview" />
+            </feature>
+        </config-file>
+        <source-file src="src/ios/openWebview.m" />
+        <source-file src="src/ios/CustomIOSAlertView.m" />
+        <source-file src="src/ios/CustomIOSAlertView.h" />
+        <resource-file src="src/ios/icons/open_webview_back@3x.png" />
+        <resource-file src="src/ios/icons/open_webview_close@3x.png" />
+    </platform>
+</plugin>

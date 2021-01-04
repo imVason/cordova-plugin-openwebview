@@ -1,0 +1,15 @@
+{
+  "name": "cordova-plugin-openwebview",
+  "version": "1.0.0",
+  "description": "Provide capability of open multiple webview",
+  "cordova": {
+    "id": "cordova-plugin-openwebview",
+    "platforms": ["android"]
+  },
+  "keywords": [
+    "cordova",
+    "webview"
+  ],
+  "author": "Vason",
+  "license": "MIT"
+}
