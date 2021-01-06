@@ -13,8 +13,10 @@
   // Member variables go here.
 }
 
-@property (nonatomic, strong) NSMutableArray *alertViewList;
-@property (nonatomic, strong) NSMutableArray *webvieViewList;
+@property (nonatomic, strong) NSMutableArray *alertViewList;    // dialog list
+@property (nonatomic, strong) NSMutableArray *webvieViewList;   // webview list
+@property (nonatomic, strong) NSMutableArray *closeButtonList;   // close button list
+@property (nonatomic, strong) NSMutableArray *backButtonList;   // back button list
 @property (nonatomic, assign) BOOL isSubWebView;
 
 - (void)open:(CDVInvokedUrlCommand*)command;
@@ -102,6 +104,15 @@
         actionContainer.layer.mask = maskLayer;
     }
     
+    int closeButtonListCount = (int)[self.closeButtonList count];
+    int backButtonListCount = (int)[self.backButtonList count];
+    if (closeButtonListCount == 0) {
+        self.closeButtonList = [[NSMutableArray alloc]init];
+    }
+    if (backButtonListCount == 0) {
+        self.backButtonList = [[NSMutableArray alloc]init];
+    }
+    
     // close button
     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     closeButton.frame = CGRectMake(10, [self getStatusBarHeight] + 5, 30, 30);
@@ -109,6 +120,7 @@
     [closeButton setTitleColor:[UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0] forState:UIControlStateNormal];
     [closeButton addTarget:self action:@selector(closeDialog:) forControlEvents:UIControlEventTouchUpInside];
     [actionContainer addSubview:closeButton];
+    [self.closeButtonList addObject:closeButton];
     
     // back button
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -116,7 +128,8 @@
     [backButton setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] bundlePath],@"open_webview_back@3x.png"]] forState:UIControlStateNormal];
     [backButton setTitleColor:[UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0] forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(webviewBack:) forControlEvents:UIControlEventTouchUpInside];
-//    [actionContainer addSubview:backButton];
+    [actionContainer addSubview:backButton];
+    [self.backButtonList addObject:backButton];
     
     return actionContainer;
 }
@@ -138,12 +151,13 @@
 // webview 后退
 - (void)webviewBack:(UIButton *)btn
 {
-    int alertViewListCount = (int)[self.alertViewList count];
-    if(alertViewListCount > 0){
-        CustomIOSAlertView *getAlertView = [self.alertViewList lastObject];
-        NSLog(@"closeDialog getAlertView: %@", getAlertView);
-        [getAlertView close];
-        [self.alertViewList removeLastObject];
+    int webvieViewListCount = (int)[self.webvieViewList count];
+    NSLog(@"webviewBack webvieViewList: %@", self.webvieViewList);
+    if(webvieViewListCount > 0){
+        WKWebView *getWebview = [self.webvieViewList lastObject];
+        NSLog(@"webviewBack getWebview: %@", getWebview);
+        [getWebview goBack];
+//        [self.alertViewList removeLastObject];
     }else{
         return;
     }
@@ -164,6 +178,11 @@
     // 创建WKWebView
     WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, [self getStatusBarHeight] + pos_y, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - [self getStatusBarHeight] - pos_y) configuration:configuration];
     webView.navigationDelegate = self;
+    int webvieViewListCount = (int)[self.webvieViewList count];
+    if (webvieViewListCount == 0) {
+        self.webvieViewList = [[NSMutableArray alloc]init];
+    }
+    [self.webvieViewList addObject:webView];
     return webView;
 }
 
@@ -193,7 +212,7 @@
 // 页面开始加载时调用
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation{
     NSLog(@"WKNavigationDelegate canGoBack: %@", webView.canGoBack? @"YES": @"NO");
-    NSLog(@"WKNavigationDelegate Tag: %i", webView.tag);
+    NSLog(@"WKNavigationDelegate Tag: %li", webView.tag);
     NSLog(@"WKNavigationDelegate didStartProvisionalNavigation: %@", @"didStartProvisionalNavigation");
 }
 // 当内容开始返回时调用
@@ -202,6 +221,11 @@
 }
 // 页面加载完成之后调用
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation{
+    NSLog(@"WKNavigationDelegate canGoBack: %@", webView.canGoBack? @"YES": @"NO");
+    NSInteger index = [self.webvieViewList indexOfObject:webView];
+    NSLog(@"WKNavigationDelegate index: %li", index);
+    UIButton* backButton = [self.backButtonList objectAtIndex:index];
+    NSLog(@"WKNavigationDelegate backButton: %@", backButton);
     NSLog(@"WKNavigationDelegate didFinishNavigation: %@", @"didFinishNavigation");
 }
 // 页面加载失败时调用
