@@ -24,6 +24,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
  * This class echoes a string called from JavaScript.
  */
@@ -40,19 +43,28 @@ public class openWebview extends CordovaPlugin {
     }
 
     private void open(JSONObject openOption, CallbackContext callbackContext) {
-        this.initShareDialog(openOption, callbackContext);
+        this.openWebViewDialog(openOption, callbackContext);
     }
 
     /**
      * 初始化 webview dialog
      */
-    private void initShareDialog(final JSONObject openOption, final CallbackContext callbackContext) {
+    private void openWebViewDialog(final JSONObject openOption, final CallbackContext callbackContext) {
         cordova.getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 try {
+                    Boolean inSubView = false;
+                    Boolean showBackBtn = false;
+                    if (openOption.has("inSubView")) {
+                        inSubView = openOption.getBoolean("inSubView");
+                    }
+                    if (openOption.has("showBackBtn")) {
+                        showBackBtn = openOption.getBoolean("showBackBtn");
+                    }
+
                     Log.d("openWebview", "run: " + openOption);
                     /* create Dialog */
-                    final Dialog mShareDialog = new Dialog(cordova.getContext(), getName("dialog_bottom_full"));
+                    final Dialog mShareDialog = new Dialog(cordova.getContext(), getName("webview_dialog"));
                     mShareDialog.setCanceledOnTouchOutside(false);
                     mShareDialog.setCancelable(false);
                     Window window = mShareDialog.getWindow();
@@ -77,10 +89,17 @@ public class openWebview extends CordovaPlugin {
                         @Override
                         public boolean shouldOverrideUrlLoading(WebView view, String url) {
                             //使用WebView加载显示url
-                            view.loadUrl(url);
+//                            view.loadUrl(url);
+                            if(Build.VERSION.SDK_INT < 26) {
+                                view.loadUrl(url);
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
+                        @Override
+                        public void onPageFinished(WebView view, String url) {
                             setWebviewBack(view, mainView);
-                            //返回true
-                            return true;
                         }
                     });
                     /* 添加webview 回调 */
@@ -91,11 +110,13 @@ public class openWebview extends CordovaPlugin {
                                 public void run() {
                                     try{
                                         JSONObject newOption = new JSONObject(options);
+                                        newOption.put("inSubView",true);
+                                        Log.d("openWebview", "newOption: " + newOption);
                                         String url = newOption.getString("url");
                                         if (url.startsWith("http://") || url.startsWith("https://")) {
-                                            Toast.makeText(cordova.getActivity(), url, Toast.LENGTH_SHORT).show();
+//                                            Toast.makeText(cordova.getActivity(), url, Toast.LENGTH_SHORT).show();
                                             WebView mainWebview = cordova.getActivity().findViewById(getId("cordovaWebView"));
-                                            mainWebview.loadUrl("javascript:cordova.plugins.openWebview.open(" + options + ")");
+                                            mainWebview.loadUrl("javascript:cordova.plugins.openWebview.open(" + newOption + ")");
                                         } else {
                                             callbackContext.error("error url, url should start width 'http://' or 'https://'.");
                                         }
@@ -117,6 +138,23 @@ public class openWebview extends CordovaPlugin {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
                     }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+                        webSettings.setAllowUniversalAccessFromFileURLs(true);
+                    }else{
+                        try {
+                            Class<?> clazz = webSettings.getClass();
+                            Method method = clazz.getMethod("setAllowUniversalAccessFromFileURLs", boolean.class);
+                            if (method != null) {
+                                method.invoke(webSettings, true);
+                            }
+                        } catch (NoSuchMethodException e) {
+                            e.printStackTrace();
+                        } catch (InvocationTargetException e) {
+                            e.printStackTrace();
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     webSettings.setBlockNetworkImage(false);//解决图片不显示
                     //设置自适应屏幕，两者合用
                     webSettings.setUseWideViewPort(true); //将图片调整到适合webview的大小
@@ -132,11 +170,15 @@ public class openWebview extends CordovaPlugin {
                     webSettings.setDefaultTextEncodingName("utf-8");//设置编码格式
                     webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);//没网，则从本地获取，即离线加载
 
+                    if (showBackBtn){
+                        mainView.findViewById(getId("open_webview_back")).setVisibility(View.VISIBLE);
+                    }
                     mainView.findViewById(getId("open_webview_back")).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             if (webviews.canGoBack()) {
                                 webviews.goBack();
+                                setWebviewBack(webviews, mainView);
                             }
                         }
                     });
@@ -145,6 +187,7 @@ public class openWebview extends CordovaPlugin {
                         public void onClick(View view) {
                             if (webviews.canGoForward()) {
                                 webviews.goForward();
+                                setWebviewBack(webviews, mainView);
                             }
                         }
                     });
@@ -153,8 +196,13 @@ public class openWebview extends CordovaPlugin {
                     webviewBox.addView(webviews);
                     /* show Dialog */
                     window.setContentView(mainView);
-                    window.getDecorView().setPadding(0, 0, 0, 0);
-                    window.getDecorView().setBackgroundColor(Color.GREEN);
+                    if (inSubView){
+                        window.getDecorView().setPadding(0, 100, 0, 0);
+                    }else{
+                        window.getDecorView().setPadding(0, 0, 0, 0);
+                    }
+
+                    window.getDecorView().setBackgroundColor(Color.parseColor("#00000000"));
                     window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);//设置横向全屏
                     mShareDialog.show();
                 } catch (Exception e) {
@@ -195,19 +243,25 @@ public class openWebview extends CordovaPlugin {
             public void run() {
                 View backBtn = mainView.findViewById(getId("open_webview_back"));
                 View forwardBtn = mainView.findViewById(getId("open_webview_forward"));
-                if (!webview.canGoBack()) {
-                    backBtn.setAlpha((float) 0.5);
-                    backBtn.setEnabled(false);
-                } else {
-                    backBtn.setAlpha(1);
-                    backBtn.setEnabled(true);
+                if (backBtn.getVisibility() == View.VISIBLE){
+                    Log.d("webview.canGoBack()", "run: " + webview.canGoBack());
+                    if (!webview.canGoBack()) {
+                        backBtn.setAlpha((float) 0.5);
+                        backBtn.setEnabled(false);
+                    } else {
+                        backBtn.setAlpha(1);
+                        backBtn.setEnabled(true);
+                    }
                 }
-                if (!webview.canGoForward()) {
-                    forwardBtn.setAlpha((float) 0.5);
-                    forwardBtn.setEnabled(false);
-                } else {
-                    forwardBtn.setAlpha(1);
-                    forwardBtn.setEnabled(true);
+
+                if (forwardBtn.getVisibility() == View.VISIBLE){
+                    if (!webview.canGoForward()) {
+                        forwardBtn.setAlpha((float) 0.5);
+                        forwardBtn.setEnabled(false);
+                    } else {
+                        forwardBtn.setAlpha(1);
+                        forwardBtn.setEnabled(true);
+                    }
                 }
             }
         });

@@ -7,11 +7,8 @@
 
 
         <ImageView android:id="@+id/open_webview_close" android:layout_width="50dp" android:layout_height="match_parent" android:layout_alignParentLeft="true" android:layout_centerVertical="true" android:layout_gravity="right" android:padding="12dp" android:src="@mipmap/open_webview_close" android:visibility="visible" tools:ignore="RtlHardcoded, ContentDescription" />
-
-        <LinearLayout android:id="@+id/open_webview_buttonBox" android:layout_width="wrap_content" android:layout_height="match_parent" android:visibility="gone" android:layout_alignParentEnd="true">
-            <ImageView android:id="@+id/open_webview_back" android:layout_width="50dp" android:layout_height="match_parent" android:padding="16dp" android:src="@mipmap/open_webview_back" android:visibility="visible" tools:ignore="RtlHardcoded, ContentDescription" />
-            <ImageView android:id="@+id/open_webview_forward" android:layout_width="50dp" android:layout_height="match_parent" android:padding="16dp" android:src="@mipmap/open_webview_back" android:visibility="gone" tools:ignore="RtlHardcoded, ContentDescription" android:rotation="180"/>
-        </LinearLayout>
+        <ImageView android:id="@+id/open_webview_back" android:layout_width="50dp" android:layout_height="match_parent" android:padding="16dp" android:src="@mipmap/open_webview_back" android:layout_marginLeft="50dp" android:visibility="gone" tools:ignore="RtlHardcoded, ContentDescription" />
+        <ImageView android:id="@+id/open_webview_forward" android:layout_width="50dp" android:layout_height="match_parent" android:padding="16dp" android:src="@mipmap/open_webview_back" android:layout_marginLeft="100dp" android:visibility="gone" tools:ignore="RtlHardcoded, ContentDescription" android:rotation="180"/>
 
     </RelativeLayout>
 
