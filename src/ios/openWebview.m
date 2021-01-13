@@ -6,7 +6,6 @@
 #import <WebKit/WebKit.h>
 #import "CustomIOSAlertView.h"
 #import "AppDelegate.h"
-#import "OpenWebvViewController.h"
 
 
 @interface openWebview : CDVPlugin {

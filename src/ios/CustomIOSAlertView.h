@@ -18,6 +18,7 @@
 @end
 
 @interface CustomIOSAlertView : UIView<CustomIOSAlertViewDelegate>
+#define isPhoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) : NO)
 
 @property (nonatomic, retain) UIView *parentView;    // The parent view this 'dialog' is attached to
 @property (nonatomic, retain) UIView *dialogView;    // Dialog's container view
