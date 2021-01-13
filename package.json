@@ -4,12 +4,23 @@
   "description": "Provide capability of open multiple webview",
   "cordova": {
     "id": "cordova-plugin-openwebview",
-    "platforms": ["android"]
+    "platforms": [
+      "ios",
+      "android"
+    ]
   },
   "keywords": [
     "cordova",
-    "webview"
+    "webview",
+    "openWebview",
+    "cordova-android",
+    "cordova-ios"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/imVason/cordova-plugin-openwebview.git"
+  },
+  "bugs": "https://github.com/imVason/cordova-plugin-openwebview/issues",
   "author": "Vason",
   "license": "MIT"
 }
