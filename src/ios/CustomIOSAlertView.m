@@ -212,19 +212,6 @@ CGFloat buttonSpacerHeight = 0;
     
     // This is the dialog's container; we attach the custom content and the buttons to this one
     UIView *dialogContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, dialogSize.width, dialogSize.height)];
-    
-    // First, we style the dialog to match the iOS7 UIAlertView >>>
-//    CAGradientLayer *gradient = [CAGradientLayer layer];
-//    gradient.frame = dialogContainer.bounds;
-//    gradient.colors = [NSArray arrayWithObjects:
-//                       (id)[[UIColor colorWithRed:218.0/255.0 green:218.0/255.0 blue:218.0/255.0 alpha:1.0f] CGColor],
-//                       (id)[[UIColor colorWithRed:233.0/255.0 green:233.0/255.0 blue:233.0/255.0 alpha:1.0f] CGColor],
-//                       (id)[[UIColor colorWithRed:218.0/255.0 green:218.0/255.0 blue:218.0/255.0 alpha:1.0f] CGColor],
-//                       nil];
-//
-//
-//    gradient.cornerRadius = cornerRadius;
-//    [dialogContainer.layer insertSublayer:gradient atIndex:0];
     CGFloat cornerRadius = kCustomIOSAlertViewCornerRadius;
     dialogContainer.layer.cornerRadius = cornerRadius;
     dialogContainer.layer.borderColor = [[UIColor colorWithRed:198.0/255.0 green:198.0/255.0 blue:198.0/255.0 alpha:1.0f] CGColor];
@@ -235,18 +222,9 @@ CGFloat buttonSpacerHeight = 0;
     dialogContainer.layer.shadowColor = [UIColor blackColor].CGColor;
     dialogContainer.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:dialogContainer.bounds cornerRadius:dialogContainer.layer.cornerRadius].CGPath;
     
-    // There is a line above the button
-//    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, dialogContainer.bounds.size.height - buttonHeight - buttonSpacerHeight, dialogContainer.bounds.size.width, buttonSpacerHeight)];
-//    lineView.backgroundColor = [UIColor colorWithRed:198.0/255.0 green:198.0/255.0 blue:198.0/255.0 alpha:1.0f];
-//    [dialogContainer addSubview:lineView];
-    // ^^^
-    
     // Add the custom container if there is any
     [dialogContainer addSubview:containerView];
-    
-    // Add the buttons too
-//    [self addButtonsToView:dialogContainer];
-    
+
     return dialogContainer;
 }
 

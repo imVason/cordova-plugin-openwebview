@@ -213,37 +213,6 @@
     }
 }
 
-//#pragma mark - WKNavigationDelegate
-//// 页面开始加载时调用
-//- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation{
-//    NSLog(@"WKNavigationDelegate canGoBack: %@", webView.canGoBack? @"YES": @"NO");
-//    NSLog(@"WKNavigationDelegate Tag: %li", webView.tag);
-//    NSLog(@"WKNavigationDelegate didStartProvisionalNavigation: %@", @"didStartProvisionalNavigation");
-//}
-//// 当内容开始返回时调用
-//- (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation{
-//    NSLog(@"WKNavigationDelegate didCommitNavigation: %@", @"didCommitNavigation");
-//}
-//// 页面加载完成之后调用
-//- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation{
-//    NSLog(@"WKNavigationDelegate canGoBack: %@", webView.canGoBack? @"YES": @"NO");
-//    NSInteger index = [self.webvieViewList indexOfObject:webView];
-//    NSLog(@"WKNavigationDelegate index: %li", index);
-//    UIButton* backButton = [self.backButtonList objectAtIndex:index];
-//    NSLog(@"WKNavigationDelegate backButton: %@", backButton);
-//    if (webView.canGoBack) {
-//        backButton.userInteractionEnabled = YES;
-//        backButton.alpha = 1.0;
-//    }else{
-//        backButton.userInteractionEnabled = NO;
-//        backButton.alpha = 0.4;
-//    }
-//}
-//// 页面加载失败时调用
-//- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation{
-//    NSLog(@"WKNavigationDelegate didFailProvisionalNavigation: %@", @"didFailProvisionalNavigation");
-//}
-
 #pragma mark - 监听加载进度
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context{
     if ([keyPath isEqualToString:@"estimatedProgress"]) {
