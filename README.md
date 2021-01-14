@@ -4,7 +4,7 @@ This plugin provide capability of open multiple webview, and you can open a new 
 
 ## Screenshot
 
-<img src="res/demo.gif" alt="微信后台配置" style="zoom:50%;" />
+<img src="res/demo.gif" alt="微信后台配置" style="width:360px" />
 
 
 
