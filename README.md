@@ -8,7 +8,7 @@ This plugin provide capability of open multiple webview, and you can open a new 
 
 ## Screenshot
 
-<img src="res/demo.gif" alt="微信后台配置" style="width:360px" />
+<img src="res/demo.gif" alt="demo" style="width:360px" />
 
 
 

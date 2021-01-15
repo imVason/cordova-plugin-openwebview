@@ -10,7 +10,7 @@
 
 ## 截图
 
-<img src="/Users/wolkwang/Desktop/Vason/AIAPartner/Plugins/openWebview/res/demo.gif" alt="微信后台配置" style="width:360px" />
+<img src="res/demo.gif" alt="demo" style="width:360px" />
 
 
 
