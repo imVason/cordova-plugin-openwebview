@@ -1,8 +1,10 @@
 package hb.plugins.openWebview;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
@@ -62,6 +64,15 @@ public class openWebview extends CordovaPlugin {
                         showBackBtn = openOption.getBoolean("showBackBtn");
                     }
 
+                    if (openOption.getString("url").contains("#webview-external")) {
+                        Log.d("open URL", "========= 外部浏览器 =========");
+                        String replacedUrl = openOption.getString("url").replace("#webview-external", "");
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(replacedUrl));
+                        cordova.getContext().startActivity(browserIntent);
+                        return;
+                    }
+
+
                     Log.d("openWebview", "run: " + openOption);
                     /* create Dialog */
                     final Dialog mShareDialog = new Dialog(cordova.getContext(), getName("webview_dialog"));
@@ -88,6 +99,7 @@ public class openWebview extends CordovaPlugin {
                     webviews.setWebViewClient(new WebViewClient() {
                         @Override
                         public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                            Log.d("open URL", url);
                             //使用WebView加载显示url
 //                            view.loadUrl(url);
                             if(Build.VERSION.SDK_INT < 26) {
@@ -192,7 +204,7 @@ public class openWebview extends CordovaPlugin {
                         }
                     });
 
-                    webviews.loadUrl(openOption.getString("url").startsWith("http") ? openOption.getString("url") : "https://www.aia.com.hk");
+                    webviews.loadUrl(openOption.getString("url").startsWith("http") ? openOption.getString("url") : "about:blank");
                     webviewBox.addView(webviews);
                     /* show Dialog */
                     window.setContentView(mainView);

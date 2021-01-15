@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-openwebview",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Provide capability of open multiple webview",
   "cordova": {
     "id": "cordova-plugin-openwebview",

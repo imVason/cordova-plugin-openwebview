@@ -2,6 +2,10 @@
 
 This plugin provide capability of open multiple webview, and you can open a new webview in sub webview page.
 
+
+
+ English | [中文介绍](./README_zh.md)
+
 ## Screenshot
 
 <img src="res/demo.gif" alt="微信后台配置" style="width:360px" />
@@ -12,6 +16,8 @@ This plugin provide capability of open multiple webview, and you can open a new 
 
 - Android
 - iOS
+
+
 
 ## Installation
 
@@ -27,6 +33,7 @@ cordova plugin add cordova-plugin-openwebview
 
 - cordova.plugins.openWebview.open
 - window.webkit.messageHandlers.openNew.postMessage
+- open system browser
 
 
 
@@ -40,9 +47,9 @@ cordova.plugins.openWebview.open(openOptions, openSuccess, openError);
 
 ### Parameters
 
-- openOptions  *\*required* 
-- openSuccess  *\*optional* 
-- openError *\*optional* 
+- openOptions 
+- openSuccess
+- openError 
 
 
 
@@ -98,10 +105,30 @@ window.webkit.messageHandlers.openNew.postMessage(openOptions);
 
 
 
+## Open url with system browser
+
+If you want to open url with system browser, only need add  `#webview-external` to the end of url.
+
+### Example
+
+```javascript
+var openOptions = {
+    url: "https://www.google.com#webview-external"
+};
+
+cordova.plugins.openWebview.open(openOptions);
+
+// or
+
+window.webkit.messageHandlers.openNew.postMessage(openOptions);
+```
+
+
+
 ## TODO
 
 - [ ]  Custom action bar background color
-- [ ]  Custom open webview sum
+- [ ]  Custom open webview sum（currently only two webviews can be opened）
 - [ ]  Post custom message form sub webview
 
 

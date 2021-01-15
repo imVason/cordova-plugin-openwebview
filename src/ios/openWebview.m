@@ -36,6 +36,18 @@
         BOOL showBackBtn = [options[@"showBackBtn"] boolValue];
         // 判断已打开的webview个数
         int alertViewListCount = (int)[self.alertViewList count];
+        // 是否打开外部浏览器
+        if ([redirectUrl containsString:@"#webview-external"]) {
+            redirectUrl = [redirectUrl stringByReplacingOccurrencesOfString:@"#webview-external" withString:@""];
+            NSURL *replacedUrl = [NSURL URLWithString:redirectUrl];
+            if ([[UIApplication sharedApplication] respondsToSelector:@selector(openURL:options:completionHandler:)]) {
+                [[UIApplication sharedApplication] openURL:replacedUrl options:@{} completionHandler:NULL];
+            }else{
+                // Fallback on earlier versions
+                [[UIApplication sharedApplication] openURL:replacedUrl];
+            }
+            return;
+        }
         if(alertViewListCount == 2){
             return;
         };
