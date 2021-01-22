@@ -34,8 +34,6 @@ cordova plugin add cordova-plugin-openwebview
 ## 方法
 
 - cordova.plugins.openWebview.open
-- window.webkit.messageHandlers.openNew.postMessage
-- 使用系统浏览器打开url
 
 
 
@@ -87,13 +85,18 @@ cordova.plugins.openWebview.open(openOptions, openSuccess, openError);
 
 
 
-## window.webkit.messageHandlers.openNew.postMessage
+## 打开子 webview
 
-此方法可以在已经打开的webview中打开一个子 webview，需要传入一个参数，参数内容与 `openOptions` 一样。
+你可以使用以下方法在已经通过 `cordova.plugins.openWebview.open` 打开的子webview页面中打开新的webview，都需要传入一个参数，参数内容与 `openOptions` 一样。
 
-注意：这个方法必须是在使用 `cordova.plugins.openWebview.open` 方法打开的 webview 中调用！
+- window.webkit.messageHandlers.openNew.postMessage (iOS)
+- openWebview.openNew (Android)
 
-### 示例
+
+
+### window.webkit.messageHandlers.openNew.postMessage
+
+#### 示例
 
 ```javascript
 var openOptions = {
@@ -103,6 +106,22 @@ var openOptions = {
 };
 
 window.webkit.messageHandlers.openNew.postMessage(openOptions);
+```
+
+
+
+### openWebview.openNew
+
+#### 示例
+
+```javascript
+var openOptions = {
+    url: "https://www.google.com",
+    inSubView: false,
+    showBackBtn: false
+};
+
+openWebview.openNew(JSON.stringify(openOptions));
 ```
 
 
@@ -123,6 +142,10 @@ cordova.plugins.openWebview.open(openOptions);
 // 以及
 
 window.webkit.messageHandlers.openNew.postMessage(openOptions);
+
+// 以及
+
+openWebview.openNew(JSON.stringify(openOptions));
 ```
 
 

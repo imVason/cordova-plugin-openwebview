@@ -32,8 +32,6 @@ cordova plugin add cordova-plugin-openwebview
 ## Methods
 
 - cordova.plugins.openWebview.open
-- window.webkit.messageHandlers.openNew.postMessage
-- open system browser
 
 
 
@@ -85,13 +83,20 @@ cordova.plugins.openWebview.open(openOptions, openSuccess, openError);
 
 
 
-## window.webkit.messageHandlers.openNew.postMessage
+## Open sub webview
 
-You can open a new webview in sub webview page, the method only have one option and same as openOptions.
 
-**WARNING**: This method must be used in the webview which has been opened with cordova.plugins.openWebview.open.
 
-### Example
+You can use below methods open a new webview in a sub webview page which has been opened with `cordova.plugins.openWebview.open`, the method only have one option and same as openOptions.
+
+- window.webkit.messageHandlers.openNew.postMessage (iOS)
+- openWebview.openNew (Android)
+
+
+
+### window.webkit.messageHandlers.openNew.postMessage
+
+#### Example
 
 ```javascript
 var openOptions = {
@@ -101,6 +106,22 @@ var openOptions = {
 };
 
 window.webkit.messageHandlers.openNew.postMessage(openOptions);
+```
+
+
+
+### openWebview.openNew
+
+#### Example
+
+```javascript
+var openOptions = {
+    url: "https://www.google.com",
+    inSubView: false,
+    showBackBtn: false
+};
+
+openWebview.openNew(JSON.stringify(openOptions));
 ```
 
 
@@ -121,6 +142,10 @@ cordova.plugins.openWebview.open(openOptions);
 // or
 
 window.webkit.messageHandlers.openNew.postMessage(openOptions);
+
+// or
+
+openWebview.openNew(JSON.stringify(openOptions));
 ```
 
 

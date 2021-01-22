@@ -205,6 +205,15 @@
     return webView;
 }
 
+- (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler {
+  NSLog(@"Allowing all");
+  SecTrustRef serverTrust = challenge.protectionSpace.serverTrust;
+  CFDataRef exceptions = SecTrustCopyExceptions (serverTrust);
+  SecTrustSetExceptions (serverTrust, exceptions);
+  CFRelease (exceptions);
+  completionHandler (NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:serverTrust]);
+}
+
 #pragma mark - WKScriptMessageHandler
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message
 {//    message.body  --  Allowed types are NSNumber, NSString, NSDate, NSArray,NSDictionary, and NSNull.
