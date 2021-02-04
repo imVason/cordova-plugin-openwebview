@@ -10,11 +10,15 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -96,6 +100,24 @@ public class openWebview extends CordovaPlugin {
                     LinearLayout webviewBox = mainView.findViewById(getId("webViewBox"));
                     final WebView webviews = new WebView(cordova.getActivity());
                     webviews.setLayoutParams(new LinearLayout.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT));
+                    webviews.setWebChromeClient(new WebChromeClient(){
+                        @Override
+                        public void onProgressChanged(WebView view, int newProgress) {
+                            super.onProgressChanged(view, newProgress);
+                            if(newProgress==100){
+                                mainView.findViewById(getId("webViewLoading")).setVisibility(View.GONE);
+                            }
+                            else{
+                                if(mainView.findViewById(getId("webViewLoading")).getVisibility() == View.GONE){
+                                    mainView.findViewById(getId("webViewLoading")).setVisibility(View.VISIBLE);
+                                    ImageView webViewLoading_pic = mainView.findViewById(getId("webViewLoading_pic"));
+                                    Animation myAlphaAnimation = AnimationUtils.loadAnimation(cordova.getContext(), getAnim("openwebview_loading_anim"));
+                                    myAlphaAnimation.setInterpolator(new LinearInterpolator());
+                                    webViewLoading_pic.startAnimation(myAlphaAnimation);
+                                }
+                            }
+                        }
+                    });
                     webviews.setWebViewClient(new WebViewClient() {
                         @Override
                         public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -109,6 +131,7 @@ public class openWebview extends CordovaPlugin {
                                 return false;
                             }
                         }
+
                         @Override
                         public void onPageFinished(WebView view, String url) {
                             setWebviewBack(view, mainView);
@@ -237,6 +260,11 @@ public class openWebview extends CordovaPlugin {
     private int getName(String name) {
         Resources resources = cordova.getContext().getResources();
         return resources.getIdentifier(name, "name", cordova.getContext().getPackageName());
+    }
+
+    private int getAnim(String name) {
+        Resources resources = cordova.getContext().getResources();
+        return resources.getIdentifier(name, "anim", cordova.getContext().getPackageName());
     }
 
     //   设置 text 组件文本

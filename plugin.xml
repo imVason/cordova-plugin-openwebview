@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="cordova-plugin-openWebview" version="1.0.6"
+<plugin id="cordova-plugin-openWebview" version="1.0.7"
     xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <name>openWebview</name>
@@ -14,10 +14,12 @@
         </config-file>
         <config-file parent="/*" target="AndroidManifest.xml" />
         <source-file src="src/android/openWebview.java" target-dir="src/hb/plugins/openWebview/openWebview" />
+        <source-file src="src/android/res/anim/openwebview_loading_anim.xml" target-dir="res/anim" />
         <source-file src="src/android/res/layout/open_webview.xml" target-dir="res/layout" />
         <source-file src="src/android/res/values/open_webview_style.xml" target-dir="res/values" />
         <source-file src="src/android/res/mipmap/open_webview_back.png" target-dir="res/mipmap-xxhdpi" />
         <source-file src="src/android/res/mipmap/open_webview_close.png" target-dir="res/mipmap-xxhdpi" />
+        <source-file src="src/android/res/mipmap/open_webview_loading.png" target-dir="res/mipmap-xxhdpi" />
     </platform>
     <platform name="ios">
         <config-file parent="/*" target="config.xml">

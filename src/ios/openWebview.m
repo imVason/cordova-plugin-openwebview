@@ -12,6 +12,7 @@
   // Member variables go here.
 }
 
+@property (nonatomic) IBOutlet UIActivityIndicatorView *indicator;
 @property (nonatomic, strong) NSMutableArray *alertViewList;    // dialog list
 @property (nonatomic, strong) NSMutableArray *webvieViewList;   // webview list
 @property (nonatomic, strong) NSMutableArray *closeButtonList;   // close button list
@@ -243,7 +244,20 @@
         NSLog(@"estimatedProgress getWebview: %@", getWebview);
         NSLog(@"estimatedProgress backButton: %@", backButton);
         NSLog(@"estimatedProgress canGoBack: %@", getWebview.canGoBack? @"YES": @"NO");
-        
+        // loading animate
+        if (!self.indicator.isAnimating) {
+            self.indicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleWhiteLarge)];
+            self.indicator.frame= CGRectMake(0, 0, getWebview.bounds.size.width, getWebview.bounds.size.height);
+            //设置小菊花颜色
+            self.indicator.color = [UIColor redColor];
+            //设置背景颜色
+            self.indicator.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
+            //刚进入这个界面会显示控件。并且停止旋转也会显示，只是没有在转动而已。
+            self.indicator.hidesWhenStopped = YES;
+            [getWebview addSubview:self.indicator];
+            [self.indicator startAnimating];
+        }
+
         if (backButton != nil) {
             if (getWebview.canGoBack) {
                 backButton.userInteractionEnabled = YES;
@@ -256,6 +270,8 @@
         }
         if ([change[NSKeyValueChangeNewKey] floatValue] == 1) {
             // page load done
+            [self.indicator stopAnimating];
+            [getWebview willRemoveSubview:self.indicator];
         }
     }else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
