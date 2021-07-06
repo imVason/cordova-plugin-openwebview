@@ -215,19 +215,6 @@
   completionHandler (NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:serverTrust]);
 }
 
-- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
-{
-    NSLog(@"============= 修复 _blank 的bug 1 =============");
-    WKFrameInfo *frameInfo = navigationAction.targetFrame;
-    if (![frameInfo isMainFrame]) {
-        NSURL *url = navigationAction.request.URL;
-        NSURLRequest *request = [NSURLRequest requestWithURL:url];
-        [webView loadRequest:request];
-        NSLog(@"============= 修复 _blank 的bug 2 =============");
-    }
-    decisionHandler(WKNavigationActionPolicyAllow);
-}
-
 #pragma mark - WKScriptMessageHandler
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message
 {//    message.body  --  Allowed types are NSNumber, NSString, NSDate, NSArray,NSDictionary, and NSNull.
@@ -284,6 +271,7 @@
         if ([change[NSKeyValueChangeNewKey] floatValue] > 0.8) {
             // page load done
             [self.indicator stopAnimating];
+            [getWebview evaluateJavaScript:@"var a = document.getElementsByTagName('a');for(var i=0;i<a.length;i++){a[i].setAttribute('target','');}" completionHandler:nil];
             [getWebview willRemoveSubview:self.indicator];
         }
     }else {
