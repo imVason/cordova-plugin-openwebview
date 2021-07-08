@@ -271,7 +271,7 @@
         if ([change[NSKeyValueChangeNewKey] floatValue] > 0.8) {
             // page load done
             [self.indicator stopAnimating];
-            [getWebview evaluateJavaScript:@"var a = document.getElementsByTagName('a');for(var i=0;i<a.length;i++){a[i].setAttribute('target','');}" completionHandler:nil];
+            [getWebview evaluateJavaScript:@"var nativeAllLinks = document.getElementsByTagName('a'); if (nativeAllLinks) { var i; for (i = 0; i < nativeAllLinks.length; i++) { var link = nativeAllLinks[i]; link.setAttribute('target', '_self'); } }" completionHandler:nil];
             [getWebview willRemoveSubview:self.indicator];
         }
     }else {

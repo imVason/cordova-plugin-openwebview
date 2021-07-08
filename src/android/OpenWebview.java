@@ -124,6 +124,11 @@ public class openWebview extends CordovaPlugin {
                             Log.d("open URL", url);
                             //使用WebView加载显示url
 //                            view.loadUrl(url);
+                            if (url.contains(".pdf")){
+                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                cordova.getContext().startActivity(browserIntent);
+                                return true;
+                            }
                             if(Build.VERSION.SDK_INT < 26) {
                                 view.loadUrl(url);
                                 return true;
@@ -134,6 +139,7 @@ public class openWebview extends CordovaPlugin {
 
                         @Override
                         public void onPageFinished(WebView view, String url) {
+                            view.loadUrl("javascript:var nativeAllLinks = document.getElementsByTagName('a'); if (nativeAllLinks) { var i; for (i = 0; i < nativeAllLinks.length; i++) { var link = nativeAllLinks[i]; link.setAttribute('target', '_self'); } }");
                             setWebviewBack(view, mainView);
                         }
                     });
